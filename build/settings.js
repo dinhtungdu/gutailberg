@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   generateButton.addEventListener('click', function (e) {
     e.preventDefault();
-    const xpath = "//style[contains(text(),'! tailwindcss')]";
+    const xpath = "//style[contains(text(),'.\\!hidden')]";
     const matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     console.log(matchingElement);
     document.getElementById('gutailberg_field_tailwind_output').value = matchingElement.textContent;

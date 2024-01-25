@@ -134,7 +134,7 @@ function gutailberg_field_tailwind_output_cb( $args ) {
 			rows="13"
 		/><?php echo esc_html( $options[ $args['label_for'] ] ?? '' ); ?></textarea>
 	<p class="description">
-		<div id="fse-templates" class="hidden"></div>
+		<div id="fse-templates" class="!hidden"></div>
 		<a href="#" id="fetch-templates" role="button" class="button button-secondary">Fetch templates</a>
 		<a href="#" id="generate-css" role="button" class="button button-secondary hidden">Generate CSS</a>
 		<a href="#" id="clear-css" role="button" class="button button-secondary">Clear CSS</a>
