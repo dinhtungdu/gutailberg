@@ -16,10 +16,5 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.0.0"
-	},
-	"dependencies": {
-		"autoprefixer": "^10.4.17",
-		"postcss": "^8.4.33",
-		"tailwind": "^4.0.0"
 	}
 }
