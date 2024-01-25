@@ -1,20 +1,4 @@
 <?php
-
-add_action( 'admin_enqueue_scripts', function() {
-	if ( 'tools_page_gutailberg' !== get_current_screen()->id ) {
-		return;
-	}
-	if ( file_exists( dirname( __DIR__ ) . '/build/settings.asset.php' ) ) {
-		$asset = require dirname( __DIR__ ) . '/build/settings.asset.php';
-		wp_enqueue_script(
-			'gutailberg-settings',
-			plugins_url( '/build/settings.js', __DIR__ ),
-			$asset['dependencies'],
-			$asset['version']
-		);
-	}
-} );
-
 /**
  * custom option and settings
  */
@@ -28,7 +12,9 @@ function gutailberg_settings_init() {
 				if ( isset( $value['gutailberg_field_tailwind_config'] ) ) {
 					$value['gutailberg_field_tailwind_config'] = sanitize_textarea_field( $value['gutailberg_field_tailwind_config'] );
 				}
-
+				if ( isset( $value['gutailberg_field_tailwind_output'] ) ) {
+					$value['gutailberg_field_tailwind_output'] = sanitize_textarea_field( $value['gutailberg_field_tailwind_output'] );
+				}
 				return $value;
 			}
 		)
@@ -127,14 +113,20 @@ function gutailberg_field_tailwind_config_cb( $args ) {
  */
 function gutailberg_field_tailwind_output_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
+	$options = get_option( 'gutailberg_options', array() );
 	?>
 	<textarea
 			id="<?php echo esc_attr( $args['label_for'] ); ?>"
 			name="gutailberg_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
 			cols="80"
 			rows="13"
-		/></textarea>
-	<p class="description"></p>
+		/><?php echo esc_html( $options[ $args['label_for'] ] ?? '' ); ?></textarea>
+	<p class="description">
+		<div id="fse-templates" class="hidden"></div>
+		<a href="#" id="fetch-templates" role="button" class="button button-secondary">Fetch templates</a>
+		<a href="#" id="generate-css" role="button" class="button button-secondary hidden">Generate CSS</a>
+		<a href="#" id="clear-css" role="button" class="button button-secondary">Clear CSS</a>
+	</p>
 	<?php
 }
 
