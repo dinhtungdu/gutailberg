@@ -56,7 +56,7 @@ function gutailberg_settings_init() {
 
 	add_settings_field(
 		'gutailberg_field_tailwind_output',
-		__( 'Tailwind output', 'gutailberg' ),
+		__( 'Tailwind CSS Output', 'gutailberg' ),
 		'gutailberg_field_tailwind_output_cb',
 		'gutailberg',
 		'gutailberg_section_default',
