@@ -13,7 +13,7 @@ function gutailberg_enqueue_tailwind_output() {
 
 	wp_register_style( 'dummy-tailwind', false );
 	wp_enqueue_style( 'dummy-tailwind' );
-    wp_add_inline_style( 'dummpy-tailwind', $options['gutailberg_field_tailwind_output'] );
+    wp_add_inline_style( 'dummy-tailwind', $options['gutailberg_field_tailwind_output'] );
 }
 
 function gutailberg_enqueue_tailwind_cdn() {
