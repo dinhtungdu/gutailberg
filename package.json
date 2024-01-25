@@ -6,15 +6,20 @@
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
-		"build": "wp-scripts build",
+		"build": "wp-scripts build src/editor.js src/settings.js",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start"
+		"start": "wp-scripts start src/editor.js src/settings.js"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.0.0"
+	},
+	"dependencies": {
+		"autoprefixer": "^10.4.17",
+		"postcss": "^8.4.33",
+		"tailwind": "^4.0.0"
 	}
 }

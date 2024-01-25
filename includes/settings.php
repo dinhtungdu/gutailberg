@@ -1,4 +1,20 @@
 <?php
+
+add_action( 'admin_enqueue_scripts', function() {
+	if ( 'tools_page_gutailberg' !== get_current_screen()->id ) {
+		return;
+	}
+	if ( file_exists( dirname( __DIR__ ) . '/build/settings.asset.php' ) ) {
+		$asset = require dirname( __DIR__ ) . '/build/settings.asset.php';
+		wp_enqueue_script(
+			'gutailberg-settings',
+			plugins_url( '/build/settings.js', __DIR__ ),
+			$asset['dependencies'],
+			$asset['version']
+		);
+	}
+} );
+
 /**
  * custom option and settings
  */
