@@ -57,7 +57,7 @@ function gutailberg_settings_init() {
 
 	add_settings_field(
 		'gutailberg_field_tailwind_editor',
-		__( 'Load Tailwind in editors', 'gutailberg' ),
+		__( 'Load Tailwind in Editors', 'gutailberg' ),
 		'gutailberg_field_tailwind_editor_cb',
 		'gutailberg',
 		'gutailberg_section_default',
