@@ -110,7 +110,14 @@ function gutailberg_field_tailwind_config_cb( $args ) {
 			name="gutailberg_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
 			cols="80"
 			rows="13"
-		/><?php echo esc_html( $options[ $args['label_for'] ] ?? '' ); ?></textarea>
+		/><?php echo esc_html(
+			$options[ $args['label_for'] ] ?? '
+tailwind.config = {
+	corePlugins: {
+		preflight: false
+	}
+}'
+		); ?></textarea>
 	<p class="description">
 	</p>
 	<?php

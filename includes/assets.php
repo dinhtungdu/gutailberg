@@ -17,14 +17,15 @@ function gutailberg_enqueue_tailwind_output() {
 }
 
 function gutailberg_enqueue_tailwind_cdn() {
-	wp_enqueue_script( 'tailwind-cdn', 'https://cdn.tailwindcss.com' );
+	wp_enqueue_script( 'tailwind-cdn', 'https://cdn.tailwindcss.com', array(), null );
 	$options = get_option( 'gutailberg_options', array() );
-	if ( ! empty( $options['gutailberg_field_tailwind_config'] ) ) {
-		wp_add_inline_script(
-			'tailwind-cdn',
-			$options['gutailberg_field_tailwind_config']
-		);
-	}
+	$config = $options['gutailberg_field_tailwind_config'] ?? 'tailwind.config = {
+		corePlugins: {
+			preflight: false
+		}
+	}';
+
+	wp_add_inline_script( 'tailwind-cdn', $config );
 }
 
 
