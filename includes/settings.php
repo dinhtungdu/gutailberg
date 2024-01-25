@@ -15,6 +15,9 @@ function gutailberg_settings_init() {
 				if ( isset( $value['gutailberg_field_tailwind_output'] ) ) {
 					$value['gutailberg_field_tailwind_output'] = sanitize_textarea_field( $value['gutailberg_field_tailwind_output'] );
 				}
+				if ( isset( $value['gutailberg_field_tailwind_editor'] ) ) {
+					$value['gutailberg_field_tailwind_editor'] = rest_sanitize_boolean( $value['gutailberg_field_tailwind_editor'] ) ? 1 : 0;
+				}
 				return $value;
 			}
 		)
@@ -48,6 +51,18 @@ function gutailberg_settings_init() {
 		'gutailberg_section_default',
 		array(
 			'label_for'         => 'gutailberg_field_tailwind_output',
+			'class'             => 'gutailberg_row',
+		)
+	);
+
+	add_settings_field(
+		'gutailberg_field_tailwind_editor',
+		__( 'Load Tailwind in editors', 'gutailberg' ),
+		'gutailberg_field_tailwind_editor_cb',
+		'gutailberg',
+		'gutailberg_section_default',
+		array(
+			'label_for'         => 'gutailberg_field_tailwind_editor',
 			'class'             => 'gutailberg_row',
 		)
 	);
@@ -101,16 +116,6 @@ function gutailberg_field_tailwind_config_cb( $args ) {
 	<?php
 }
 
-/**
- * Pill field callback function.
- *
- * WordPress has magic interaction with the following keys: label_for, class.
- * - the "label_for" key value is used for the "for" attribute of the <label>.
- * - the "class" key value is used for the "class" attribute of the <tr> containing the field.
- * Note: you can add custom key value pairs to be used inside your callbacks.
- *
- * @param array $args
- */
 function gutailberg_field_tailwind_output_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = get_option( 'gutailberg_options', array() );
@@ -126,6 +131,23 @@ function gutailberg_field_tailwind_output_cb( $args ) {
 		<a href="#" id="fetch-templates" role="button" class="button button-secondary">Fetch templates</a>
 		<a href="#" id="generate-css" role="button" class="button button-secondary hidden">Generate CSS</a>
 		<a href="#" id="clear-css" role="button" class="button button-secondary">Clear CSS</a>
+	</p>
+	<?php
+}
+
+function gutailberg_field_tailwind_editor_cb( $args ) {
+	// Get the value of the setting we've registered with register_setting()
+	$options = get_option( 'gutailberg_options', array() );
+	?>
+	<input
+		type="checkbox"
+		id="<?php echo esc_attr( $args['label_for'] ); ?>"
+		name="gutailberg_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+		value="1"
+		<?php checked( 1, $options[ $args['label_for'] ] ?? 0 ); ?>
+	/>
+	<p class="description">
+		<?php echo esc_html__( 'Load Tailwind in the editor. Use block list to navigate to hidden blocks.'); ?>
 	</p>
 	<?php
 }

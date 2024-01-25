@@ -18,6 +18,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/includes/assets.php';
 require_once __DIR__ . '/includes/settings.php';
-require_once __DIR__ . '/includes/editor.php';
 require_once __DIR__ . '/includes/frontend.php';
 require_once __DIR__ . '/includes/ajax.php';

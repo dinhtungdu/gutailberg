@@ -1,8 +1,10 @@
 <?php
-add_action( 'wp_enqueue_scripts', 'enqueue_tailwind_script' );
-add_action( 'admin_enqueue_scripts', 'admin_enqueue_tailwind_script' );
+add_action( 'wp_enqueue_scripts', 'gutailberg_enqueue_tailwind_script' );
+add_action( 'admin_enqueue_scripts', 'gutailberg_enqueue_admin_script' );
+add_action( 'enqueue_block_editor_assets', 'gutailberg_enqueue_block_editor_assets' );
+add_action( 'enqueue_block_assets', 'gutailberg_enqueue_block_assets' );
 
-function enqueue_tailwind_output() {
+function gutailberg_enqueue_tailwind_output() {
 	$options = get_option( 'gutailberg_options', array() );
 
 	if ( empty( $options['gutailberg_field_tailwind_output'] ) ) {
@@ -14,7 +16,7 @@ function enqueue_tailwind_output() {
     wp_add_inline_style( 'dummpy-tailwind', $options['gutailberg_field_tailwind_output'] );
 }
 
-function enqueue_tailwind_cdn() {
+function gutailberg_enqueue_tailwind_cdn() {
 	wp_enqueue_script( 'tailwind-cdn', 'https://cdn.tailwindcss.com' );
 	$options = get_option( 'gutailberg_options', array() );
 	if ( ! empty( $options['gutailberg_field_tailwind_config'] ) ) {
@@ -26,31 +28,60 @@ function enqueue_tailwind_cdn() {
 }
 
 
-function enqueue_tailwind_script() {
+function gutailberg_enqueue_tailwind_script() {
 	$options = get_option( 'gutailberg_options', array() );
 	if (
+		is_admin() ||
 		empty( $options['gutailberg_field_tailwind_output'] ) ||
 		isset( $_GET['tailwindcss'] )
 	) {
-		enqueue_tailwind_cdn();
+		gutailberg_enqueue_tailwind_cdn();
 	} else {
-		enqueue_tailwind_output();
+		gutailberg_enqueue_tailwind_output();
 	}
 }
 
-function admin_enqueue_tailwind_script() {
-	if ( 'tools_page_gutailberg' !== get_current_screen()->id ) {
+function gutailberg_enqueue_admin_script() {
+	if (
+		'tools_page_gutailberg' !== get_current_screen()->id ||
+		! file_exists( dirname( __DIR__ ) . '/build/settings.asset.php' )
+	) {
 		return;
 	}
 
-	if ( file_exists( dirname( __DIR__ ) . '/build/settings.asset.php' ) ) {
-		$asset = require dirname( __DIR__ ) . '/build/settings.asset.php';
-		enqueue_tailwind_cdn();
-		wp_enqueue_script(
-			'gutailberg-settings',
-			plugins_url( '/build/settings.js', __DIR__ ),
-			$asset['dependencies'],
-			$asset['version']
-		);
+	gutailberg_enqueue_tailwind_cdn();
+
+	$asset = require dirname( __DIR__ ) . '/build/settings.asset.php';
+	wp_enqueue_script(
+		'gutailberg-settings',
+		plugins_url( '/build/settings.js', __DIR__ ),
+		$asset['dependencies'],
+		$asset['version']
+	);
+}
+
+function gutailberg_enqueue_block_editor_assets() {
+	if ( ! file_exists( dirname( __DIR__ ) . '/build/editor.asset.php' ) ) {
+		return;
+	}
+
+	$asset = require dirname( __DIR__ ) . '/build/editor.asset.php';
+	wp_enqueue_script(
+		'gutailberg-editor',
+		plugins_url( '/build/editor.js', __DIR__ ),
+		$asset['dependencies'],
+		$asset['version']
+	);
+}
+
+function gutailberg_enqueue_block_assets() {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$options = get_option( 'gutailberg_options', array() );
+
+	if ( $options['gutailberg_field_tailwind_editor'] ?? false ) {
+		gutailberg_enqueue_tailwind_cdn();
 	}
 }
