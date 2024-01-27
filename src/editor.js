@@ -7,6 +7,12 @@ import { FormTokenField } from '@wordpress/components';
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
+let classList;
+
+if ( ! classList && !! createTailwindcssContext && !! tailwind.config ) {
+	classList = createTailwindcssContext( tailwind.config ).getClassList();
+}
+
 const withGutailbergControls = createHigherOrderComponent( ( BlockEdit ) => {
     return ( props ) => {
         return (
@@ -18,6 +24,7 @@ const withGutailbergControls = createHigherOrderComponent( ( BlockEdit ) => {
 						label={__('CSS classes', 'gutailberg')}
 						onChange={tokens => props.setAttributes({className: tokens.join(' ')})}
 						value={(props.attributes?.className || '').split(' ').filter(Boolean)}
+						suggestions={classList}
 					/>
 					</PanelBody>
                 </InspectorControls>
