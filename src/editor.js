@@ -22,7 +22,7 @@ const withGutailbergControls = createHigherOrderComponent( ( BlockEdit ) => {
                     <PanelBody>
 					<FormTokenField
 						label={__('CSS classes', 'gutailberg')}
-						onChange={tokens => props.setAttributes({className: tokens.join(' ')})}
+						onChange={tokens => props.setAttributes({className: tokens.sort().join(' ')})}
 						value={(props.attributes?.className || '').split(' ').filter(Boolean)}
 						suggestions={classList}
 					/>
