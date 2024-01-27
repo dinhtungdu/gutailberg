@@ -157,7 +157,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let classList;
-if (!classList && !!createTailwindcssContext && !!tailwind.config) {
+if (!classList && typeof createTailwindcssContext == 'function' && !!tailwind?.config) {
   classList = createTailwindcssContext(tailwind.config).getClassList();
 }
 const withGutailbergControls = (0,_wordpress_compose__WEBPACK_IMPORTED_MODULE_1__.createHigherOrderComponent)(BlockEdit => {

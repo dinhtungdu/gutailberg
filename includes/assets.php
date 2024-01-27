@@ -29,7 +29,6 @@ function gutailberg_enqueue_admin_assets() {
 }
 
 function gutailberg_enqueue_block_editor_assets() {
-	wp_enqueue_script( 'gutailberg-tailwindcss-context' );
 	wp_enqueue_script( 'gutailberg-editor' );
 }
 
@@ -65,6 +64,9 @@ function gutailberg_register_assets() {
 
 	if ( file_exists( dirname( __DIR__ ) . '/build/editor.asset.php' ) ) {
 		$asset = require dirname( __DIR__ ) . '/build/editor.asset.php';
+		if ( $options['gutailberg_field_tailwind_suggestion'] ?? false ) {
+			$asset['dependencies'][] = 'gutailberg-tailwindcss-context';
+		}
 		wp_register_script( 'gutailberg-editor', plugins_url( '/build/editor.js', __DIR__ ), $asset['dependencies'], $asset['version'] );
 	}
 }

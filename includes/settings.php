@@ -18,6 +18,9 @@ function gutailberg_settings_init() {
 				if ( isset( $value['gutailberg_field_tailwind_editor'] ) ) {
 					$value['gutailberg_field_tailwind_editor'] = rest_sanitize_boolean( $value['gutailberg_field_tailwind_editor'] ) ? 1 : 0;
 				}
+				if ( isset( $value['gutailberg_field_tailwind_suggestion'] ) ) {
+					$value['gutailberg_field_tailwind_suggestion'] = rest_sanitize_boolean( $value['gutailberg_field_tailwind_suggestion'] ) ? 1 : 0;
+				}
 				return $value;
 			}
 		)
@@ -63,6 +66,18 @@ function gutailberg_settings_init() {
 		'gutailberg_section_default',
 		array(
 			'label_for'         => 'gutailberg_field_tailwind_editor',
+			'class'             => 'gutailberg_row',
+		)
+	);
+
+	add_settings_field(
+		'gutailberg_field_tailwind_suggestion',
+		__( 'Tailwind class suggestion', 'gutailberg' ),
+		'gutailberg_field_tailwind_suggestion_cb',
+		'gutailberg',
+		'gutailberg_section_default',
+		array(
+			'label_for'         => 'gutailberg_field_tailwind_suggestion',
 			'class'             => 'gutailberg_row',
 		)
 	);
@@ -155,6 +170,23 @@ function gutailberg_field_tailwind_editor_cb( $args ) {
 	/>
 	<p class="description">
 		<?php echo esc_html__( 'Load Tailwind in the editor. Use block list to navigate to hidden blocks.'); ?>
+	</p>
+	<?php
+}
+
+function gutailberg_field_tailwind_suggestion_cb( $args ) {
+	// Get the value of the setting we've registered with register_setting()
+	$options = get_option( 'gutailberg_options', array() );
+	?>
+	<input
+		type="checkbox"
+		id="<?php echo esc_attr( $args['label_for'] ); ?>"
+		name="gutailberg_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+		value="1"
+		<?php checked( 1, $options[ $args['label_for'] ] ?? 0 ); ?>
+	/>
+	<p class="description">
+		<?php echo esc_html__( 'This may affect editor performance.'); ?>
 	</p>
 	<?php
 }

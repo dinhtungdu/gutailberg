@@ -9,7 +9,7 @@ import { __ } from '@wordpress/i18n';
 
 let classList;
 
-if ( ! classList && !! createTailwindcssContext && !! tailwind.config ) {
+if ( ! classList && typeof createTailwindcssContext == 'function' && !! tailwind?.config ) {
 	classList = createTailwindcssContext( tailwind.config ).getClassList();
 }
 
