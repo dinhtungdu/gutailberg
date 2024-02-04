@@ -119,7 +119,9 @@ function gutailberg_section_default_callback( $args ) {
 function gutailberg_field_tailwind_config_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
 	if ( gutailberg_get_tailwind_config_path() ) {
-		echo 'Using config from <code>' . gutailberg_get_tailwind_config_path() . '</code>';
+		$path = gutailberg_get_tailwind_config_path();
+	    $path = substr( $path, strpos( $path, 'wp-content' ) ?? 0 );
+		echo 'Using config from <code>' . $path . '</code>';
 		return;
 	}
 	$options = get_option( 'gutailberg_options', array() );
