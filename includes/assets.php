@@ -7,13 +7,14 @@ add_action( 'enqueue_block_assets', 'gutailberg_enqueue_block_assets' );
 add_filter( 'option_gutailberg_options', 'gutailberg_default_options' );
 
 function gutailberg_enqueue_frontend_assets() {
-	$options = get_option( 'gutailberg_options', array() );
+	$options = get_option( 'gutailberg_options' );
 	if (
 		is_admin() ||
 		empty( $options['gutailberg_field_tailwind_output'] ) ||
 		isset( $_GET['tailwindcss'] )
 	) {
 		wp_enqueue_script( 'gutailberg-tailwindcss-cdn' );
+		wp_enqueue_script( 'gutailberg-tailwindcss-config' );
 	} else {
 		wp_enqueue_style( 'gutailberg-generated-css' );
 	}
@@ -25,6 +26,7 @@ function gutailberg_enqueue_admin_assets() {
 	}
 
 	wp_enqueue_script( 'gutailberg-tailwindcss-cdn' );
+	wp_enqueue_script( 'gutailberg-tailwindcss-config' );
 	wp_enqueue_script( 'gutailberg-settings' );
 }
 
@@ -37,39 +39,34 @@ function gutailberg_enqueue_block_assets() {
 		return;
 	}
 
-	$options = get_option( 'gutailberg_options', array() );
+	$options = get_option( 'gutailberg_options' );
 
 	if ( $options['gutailberg_field_tailwind_editor'] ?? false ) {
 		wp_enqueue_script( 'gutailberg-tailwindcss-cdn' );
+		wp_enqueue_script( 'gutailberg-tailwindcss-config' );
 	}
 }
 
-function gutailberg_get_tailwind_config_path() {
-	$path = apply_filters( 'gutailberg_tailwind_config_path', null );
-
-	if ( file_exists( $path ) ) {
-		return $path;
-	}
-
-	return null;
+function gutailberg_get_tailwind_config_url() {
+	return apply_filters( 'gutailberg_tailwind_config_url', null );
 }
 
 function gutailberg_register_assets() {
-	$options = get_option( 'gutailberg_options', array() );
+	$options = get_option( 'gutailberg_options' );
 
 	wp_register_style( 'gutailberg-generated-css', false );
     wp_add_inline_style( 'gutailberg-generated-css', $options['gutailberg_field_tailwind_output'] );
 
-	if ( gutailberg_get_tailwind_config_path() ) {
-		$config = file_get_contents( gutailberg_get_tailwind_config_path() );
-	} else {
-		$config = 'window.tailwind = window.tailwind ?? {};' . $options['gutailberg_field_tailwind_config'];
-	}
-
 	wp_register_script( 'gutailberg-tailwindcss-cdn', 'https://cdn.tailwindcss.com', array(), null );
-	wp_add_inline_script( 'gutailberg-tailwindcss-cdn', $config );
 	wp_register_script( 'gutailberg-tailwindcss-context', plugins_url( '/assets/js/tailwind-context.js', __DIR__ ), array(), null );
-	wp_add_inline_script( 'gutailberg-tailwindcss-context', $config );
+
+	if ( gutailberg_get_tailwind_config_url() ) {
+		wp_register_script( 'gutailberg-tailwindcss-config', gutailberg_get_tailwind_config_url(), array(), null  );
+	} else {
+		wp_register_script( 'gutailberg-tailwindcss-config', false );
+		$config = 'window.tailwind = window.tailwind ?? {};' . $options['gutailberg_field_tailwind_config'];
+		wp_add_inline_script( 'gutailberg-tailwindcss-config', $config );
+	}
 
 	if ( file_exists( dirname( __DIR__ ) . '/build/settings.asset.php' ) ) {
 		$asset = require dirname( __DIR__ ) . '/build/settings.asset.php';
@@ -80,21 +77,26 @@ function gutailberg_register_assets() {
 		$asset = require dirname( __DIR__ ) . '/build/editor.asset.php';
 		if ( $options['gutailberg_field_tailwind_suggestion'] ?? false ) {
 			$asset['dependencies'][] = 'gutailberg-tailwindcss-context';
+			$asset['dependencies'][] = 'gutailberg-tailwindcss-config';
 		}
 		wp_register_script( 'gutailberg-editor', plugins_url( '/build/editor.js', __DIR__ ), $asset['dependencies'], $asset['version'] );
 	}
 }
 
 function gutailberg_default_options( $options ) {
-	if ( ! empty( $options['gutailberg_field_tailwind_config'] ) ) {
-		return $options;
-	}
-
-	$options['gutailberg_field_tailwind_config'] ?? 'tailwind.config = {
+	$default_config = 'tailwind.config = {
 		corePlugins: {
 			preflight: false
 		}
 	}';
 
-	return $options;
+	return wp_parse_args(
+		$options,
+		array(
+			'gutailberg_field_tailwind_config'     => $default_config,
+			'gutailberg_field_tailwind_output'     => '',
+			'gutailberg_field_tailwind_editor'     => false,
+			'gutailberg_field_tailwind_suggestion' => false,
+		)
+	);
 }

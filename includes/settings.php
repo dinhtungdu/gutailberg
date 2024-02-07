@@ -118,8 +118,8 @@ function gutailberg_section_default_callback( $args ) {
  */
 function gutailberg_field_tailwind_config_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
-	if ( gutailberg_get_tailwind_config_path() ) {
-		$path = gutailberg_get_tailwind_config_path();
+	if ( gutailberg_get_tailwind_config_url() ) {
+		$path = gutailberg_get_tailwind_config_url();
 	    $path = substr( $path, strpos( $path, 'wp-content' ) ?? 0 );
 		echo 'Using config from <code>' . $path . '</code>';
 		return;
