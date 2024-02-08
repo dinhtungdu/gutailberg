@@ -12,6 +12,9 @@ function gutailberg_settings_init() {
 				if ( isset( $value['gutailberg_field_tailwind_config'] ) ) {
 					$value['gutailberg_field_tailwind_config'] = sanitize_textarea_field( $value['gutailberg_field_tailwind_config'] );
 				}
+				if ( isset( $value['gutailberg_field_tailwind_custom_css'] ) ) {
+					$value['gutailberg_field_tailwind_custom_css'] = sanitize_textarea_field( $value['gutailberg_field_tailwind_custom_css'] );
+				}
 				if ( isset( $value['gutailberg_field_tailwind_output'] ) ) {
 					$value['gutailberg_field_tailwind_output'] = sanitize_textarea_field( $value['gutailberg_field_tailwind_output'] );
 				}
@@ -42,6 +45,18 @@ function gutailberg_settings_init() {
 		'gutailberg_section_default',
 		array(
 			'label_for'         => 'gutailberg_field_tailwind_config',
+			'class'             => 'gutailberg_row',
+		)
+	);
+
+	add_settings_field(
+		'gutailberg_field_tailwind_custom_css',
+		__( 'Tailwind Custom CSS', 'gutailberg' ),
+		'gutailberg_field_tailwind_custom_css_cb',
+		'gutailberg',
+		'gutailberg_section_default',
+		array(
+			'label_for'         => 'gutailberg_field_tailwind_custom_css',
 			'class'             => 'gutailberg_row',
 		)
 	);
@@ -139,6 +154,27 @@ tailwind.config = {
 	}
 }'
 		); ?></textarea>
+	<p class="description">
+	</p>
+	<?php
+}
+
+function gutailberg_field_tailwind_custom_css_cb( $args ) {
+	// Get the value of the setting we've registered with register_setting()
+	if ( gutailberg_get_tailwind_custom_css_path() ) {
+		$path = gutailberg_get_tailwind_custom_css_path();
+	    $path = substr( $path, strpos( $path, 'wp-content' ) ?? 0 );
+		echo 'Using custom css from <code>' . $path . '</code>';
+		return;
+	}
+	$options = get_option( 'gutailberg_options', array() );
+	?>
+	<textarea
+			id="<?php echo esc_attr( $args['label_for'] ); ?>"
+			name="gutailberg_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+			cols="80"
+			rows="13"
+		/><?php echo esc_html( $options[ $args['label_for'] ] ?? '' ); ?></textarea>
 	<p class="description">
 	</p>
 	<?php
