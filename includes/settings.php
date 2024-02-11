@@ -162,9 +162,15 @@ tailwind.config = {
 function gutailberg_field_tailwind_custom_css_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
 	if ( gutailberg_get_tailwind_custom_css_paths() ) {
-		$path = gutailberg_get_tailwind_custom_css_paths();
-	    $path = substr( $path, strpos( $path, 'wp-content' ) ?? 0 );
-		echo 'Using custom css from <code>' . $path . '</code>';
+		$paths = gutailberg_get_tailwind_custom_css_paths();
+		?>
+		<p><?php echo __( 'Using custom CSS from:', 'gutailberg' ); ?></p>
+		<ul>
+			<?php foreach ($paths as $path): ?>
+				<li><code><?php echo substr( $path, strpos( $path, 'wp-content' ) ?? 0 ); ?></code></li>
+			<?php endforeach; ?>
+		</ul>
+		<?php
 		return;
 	}
 	$options = get_option( 'gutailberg_options', array() );
