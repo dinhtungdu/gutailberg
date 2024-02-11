@@ -9,11 +9,16 @@ add_filter( 'option_gutailberg_options', 'gutailberg_default_options' );
 function gutailberg_print_tailwind_custom_css() {
 	$custom_css = '';
 
-	if ( gutailberg_get_tailwind_custom_css_path() ) {
+	if ( gutailberg_get_tailwind_custom_css_paths() ) {
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 		$filesystem = new WP_Filesystem_Direct( true );
-		$custom_css = $filesystem->get_contents( gutailberg_get_tailwind_custom_css_path() )	;
+		$custom_css = '';
+		foreach ( (array) gutailberg_get_tailwind_custom_css_paths() as $path ) {
+			if ( $filesystem->exists( $path ) ) {
+				$custom_css .= $filesystem->get_contents( $path )	;
+			}
+		}
 	}
 
 	if ( ! $custom_css ) {
@@ -75,8 +80,8 @@ function gutailberg_get_tailwind_config_url() {
 	return apply_filters( 'gutailberg_tailwind_config_url', null );
 }
 
-function gutailberg_get_tailwind_custom_css_path() {
-	return apply_filters( 'gutailberg_tailwind_custom_css_path', null );
+function gutailberg_get_tailwind_custom_css_paths() {
+	return apply_filters( 'gutailberg_tailwind_custom_css_path', array() );
 }
 
 function gutailberg_register_assets() {

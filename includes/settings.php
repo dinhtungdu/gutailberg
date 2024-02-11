@@ -161,8 +161,8 @@ tailwind.config = {
 
 function gutailberg_field_tailwind_custom_css_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
-	if ( gutailberg_get_tailwind_custom_css_path() ) {
-		$path = gutailberg_get_tailwind_custom_css_path();
+	if ( gutailberg_get_tailwind_custom_css_paths() ) {
+		$path = gutailberg_get_tailwind_custom_css_paths();
 	    $path = substr( $path, strpos( $path, 'wp-content' ) ?? 0 );
 		echo 'Using custom css from <code>' . $path . '</code>';
 		return;
