@@ -90,7 +90,12 @@ function gutailberg_register_assets() {
 	wp_register_style( 'gutailberg-generated-css', false );
     wp_add_inline_style( 'gutailberg-generated-css', $options['gutailberg_field_tailwind_output'] );
 
-	wp_register_script( 'gutailberg-tailwindcss-cdn', 'https://cdn.tailwindcss.com', array(), null );
+	wp_register_script(
+		'gutailberg-tailwindcss-cdn',
+		apply_filters( 'gutailberg_tailwind_cdn_url', 'https://cdn.tailwindcss.com' ),
+		array(),
+		null
+	);
 	wp_register_script( 'gutailberg-tailwindcss-context', plugins_url( '/assets/js/tailwind-context.js', __DIR__ ), array(), null );
 
 	if ( gutailberg_get_tailwind_config_url() ) {
