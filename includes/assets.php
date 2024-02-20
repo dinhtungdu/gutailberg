@@ -21,10 +21,8 @@ function gutailberg_print_tailwind_custom_css() {
 		}
 	}
 
-	if ( ! $custom_css ) {
-		$options = get_option( 'gutailberg_options' );
-		$custom_css = $options['gutailberg_field_tailwind_custom_css'];
-	}
+	$options = get_option( 'gutailberg_options' );
+	$custom_css .= $options['gutailberg_field_tailwind_custom_css'];
 
 	if ( $custom_css ) {
 		printf( '<style type="text/tailwindcss">%s</style>', $custom_css );

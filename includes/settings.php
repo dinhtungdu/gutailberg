@@ -160,6 +160,7 @@ tailwind.config = {
 }
 
 function gutailberg_field_tailwind_custom_css_cb( $args ) {
+    $options = get_option( 'gutailberg_options', array() );
 	// Get the value of the setting we've registered with register_setting()
 	if ( gutailberg_get_tailwind_custom_css_paths() ) {
 		$paths = gutailberg_get_tailwind_custom_css_paths();
@@ -170,11 +171,7 @@ function gutailberg_field_tailwind_custom_css_cb( $args ) {
 				<li><code><?php echo substr( $path, strpos( $path, 'wp-content' ) ?? 0 ); ?></code></li>
 			<?php endforeach; ?>
 		</ul>
-		<?php
-		return;
-	}
-	$options = get_option( 'gutailberg_options', array() );
-	?>
+	<?php } ?>
 	<textarea
 			id="<?php echo esc_attr( $args['label_for'] ); ?>"
 			name="gutailberg_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
