@@ -36,7 +36,6 @@ function gutailberg_enqueue_frontend_assets() {
 		empty( $options['gutailberg_field_tailwind_output'] ) ||
 		isset( $_GET['tailwindcss'] )
 	) {
-		wp_enqueue_script( 'gutailberg-tailwindcss-cdn' );
 		wp_enqueue_script( 'gutailberg-tailwindcss-config' );
 		gutailberg_print_tailwind_custom_css();
 	} else {
@@ -49,7 +48,6 @@ function gutailberg_enqueue_admin_assets() {
 		return;
 	}
 
-	wp_enqueue_script( 'gutailberg-tailwindcss-cdn' );
 	wp_enqueue_script( 'gutailberg-tailwindcss-config' );
 	wp_enqueue_script( 'gutailberg-settings' );
 	gutailberg_print_tailwind_custom_css();
@@ -67,7 +65,6 @@ function gutailberg_enqueue_block_assets() {
 	$options = get_option( 'gutailberg_options' );
 
 	if ( $options['gutailberg_field_tailwind_editor'] ?? false ) {
-		wp_enqueue_script( 'gutailberg-tailwindcss-cdn' );
 		wp_enqueue_script( 'gutailberg-tailwindcss-config' );
 		add_action( 'wp_print_styles', 'gutailberg_print_tailwind_custom_css' );
 	}
@@ -97,9 +94,9 @@ function gutailberg_register_assets() {
 	wp_register_script( 'gutailberg-tailwindcss-context', plugins_url( '/assets/js/tailwind-context.js', __DIR__ ), array(), null );
 
 	if ( gutailberg_get_tailwind_config_url() ) {
-		wp_register_script( 'gutailberg-tailwindcss-config', gutailberg_get_tailwind_config_url(), array(), null  );
+		wp_register_script( 'gutailberg-tailwindcss-config', gutailberg_get_tailwind_config_url(), array( 'gutailberg-tailwindcss-cdn' ), null  );
 	} else {
-		wp_register_script( 'gutailberg-tailwindcss-config', false );
+		wp_register_script( 'gutailberg-tailwindcss-config', false, array( 'gutailberg-tailwindcss-cdn' ), null );
 		$config = 'window.tailwind = window.tailwind ?? {};' . $options['gutailberg_field_tailwind_config'];
 		wp_add_inline_script( 'gutailberg-tailwindcss-config', $config );
 	}

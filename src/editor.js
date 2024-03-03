@@ -4,6 +4,7 @@ import { PanelBody } from '@wordpress/components';
 import { FormTokenField } from '@wordpress/components';
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
+import { useSelect } from '@wordpress/data';
 
 let classList;
 
@@ -55,7 +56,26 @@ function classesToClassName( classes ) {
 
 const withGutailbergControls = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
+		if ( ! props.isSelected ) {
+			return <BlockEdit { ...props } />;
+		}
+
+		const isBlockLocked = useSelect( ( select ) => {
+			const { canMoveBlock, canRemoveBlock, getBlockRootClientId } =
+				select( 'core/block-editor' );
+			const rootClientId = getBlockRootClientId( props.clientId );
+
+			const canMove = canMoveBlock( props.clientId, rootClientId );
+			const canRemove = canRemoveBlock( props.clientId, rootClientId );
+			return ! canMove || ! canRemove;
+		} );
+
+		if ( isBlockLocked ) {
+			return <BlockEdit { ...props } />;
+		}
+
 		const classes = classNameToClasses( props.attributes.className );
+
 		return (
 			<>
 				<BlockEdit key="edit" { ...props } />
